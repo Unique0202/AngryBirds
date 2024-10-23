@@ -129,7 +129,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void exit2Button() {
-        System.out.println("Settings exited");
+        System.out.println("Settings closed");
         isSettingsScreen = false;
         isPlayScreen = true;
 
