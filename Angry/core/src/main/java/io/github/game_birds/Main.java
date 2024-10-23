@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.audio.Music;
 
 public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenListener, PlayScreen.PlayScreenListener, SettingsScreen.SettingsScreenListener, LevelSelectionScreen.LevelSelectionScreenListener, Level1Screen.Level1ScreenListener, Level2Screen.Level2ScreenListener, Level3Screen.Level3ScreenListener, PauseScreen.PauseScreenListener {
     private SpriteBatch batch;
@@ -28,6 +29,8 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     private boolean wasLevel1Screen = false;
     private boolean wasLevel2Screen = false;
     private boolean wasLevel3Screen = false;
+    private String savedLevelScreen;
+    private Music backgroundMusic;
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -37,6 +40,11 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
         new Rectangle((Gdx.graphics.getWidth() - 100) / 2, 30, 100, 75),
             this
         );
+        // Load the background music
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("angry_birds.mp3"));
+        backgroundMusic.setLooping(true);  // The music will loop
+        backgroundMusic.play();            // Play the music
+
     }
 
     @Override
@@ -87,13 +95,14 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void playButton() {
+        System.out.println("Play button clicked");
         playScreen = new PlayScreen(
             new Texture("background2.jpg"),
             new Texture("play.png"),
             new Texture("exit.png"),
             new Texture("settings.png"),
             new Texture("load.png"),
-            new Rectangle(165, 100, 300, 300),
+            new Rectangle(165, 140, 300, 300),
             new Circle(570, 400, 60),
             new Circle(10, 410, 55),
             new Rectangle(180, 10, 270, 220),
@@ -104,6 +113,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void settingButton() {
+        System.out.println("Settings button clicked");
         settingsScreen = new SettingsScreen(
             new Texture("settings_back.png"),
             new Texture("exit.png"),
@@ -114,16 +124,19 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void exitButton() {
+        System.out.println("Game exited");
         Gdx.app.exit();
     }
     @Override
     public void exit2Button() {
+        System.out.println("Settings exited");
         isSettingsScreen = false;
         isPlayScreen = true;
 
     }
     @Override
     public void playButton2() {
+        System.out.println("Play clicked");
         levelSelectionScreen = new LevelSelectionScreen(
             new Texture("background3.jpg"),
             new Texture("level1_texture.png"),
@@ -145,11 +158,13 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void backButton() {
+        System.out.println("Back button clicked");
         isLevelSelectionScreen = false;
         isPlayScreen = true;
     }
     @Override
     public void level1Button() {
+        System.out.println("Level 1 clicked");
         level1Screen = new Level1Screen(
             new Texture("level1_back.jpg"),
             new Texture("rock.png"),
@@ -161,7 +176,9 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
             new Texture("hut.png"),
             new Texture("pig2.png"),
             new Texture("pause.png"),
+            new Texture("download.png"),
             new Circle(0, 375, 100),
+            new Circle(580, 410, 60),
             this
         );
         isLevelSelectionScreen = false;
@@ -172,6 +189,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void level2Button() {
+        System.out.println("Level 2 clicked");
         level2Screen = new Level2Screen(
             new Texture("level2_back.jpg"),
             new Texture("stand.png"),
@@ -185,7 +203,9 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
             new Texture("yellowbird.png"),
             new Texture("slingshot.png"),
             new Texture("pause.png"),
+            new Texture("download.png"),
             new Circle(0, 375, 100),
+            new Circle(580, 410, 60),
                 this
         );
         isLevelSelectionScreen = false;
@@ -196,6 +216,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void level3Button() {
+        System.out.println("Level 3 clicked");
         level3Screen = new Level3Screen(
             new Texture("level3_back.png"),
             new Texture("stand2.png"),
@@ -213,7 +234,9 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
             new Texture("pig2.png"),
             new Texture("glass.png"),
             new Texture("pause.png"),
+            new Texture("download.png"),
             new Circle(0, 375, 100),
+            new Circle(580, 410, 60),
             this
         );
         isLevelSelectionScreen = false;
@@ -224,6 +247,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void pauseButton() {
+        System.out.println("Pause button clicked");
         pauseScreen = new PauseScreen(
             new Texture("pause.jpg"),
             new Texture("backbutton.png"),
@@ -241,11 +265,13 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void back2Button() {
+        System.out.println("Back button clicked");
         isPauseScreen = false;
         isLevelSelectionScreen = true;
     }
     @Override
     public void restartButton() {
+        System.out.println("Restart button clicked");
         isPauseScreen = false;
         if (wasLevel1Screen) {
             level1Button(); // Reinitialize Level 1
@@ -257,12 +283,49 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     }
     @Override
     public void resumeButton() {
+        System.out.println("Resume button clicked");
         isPauseScreen = false;
         if (wasLevel1Screen) {
             isLevel1Screen = true;
         } else if (wasLevel2Screen) {
             isLevel2Screen = true;
         } else if (wasLevel3Screen) {
+            isLevel3Screen = true;
+        }
+    }
+    @Override
+    public void downloadButton() {
+        System.out.println("Save button clicked");
+        if (isLevel1Screen) {
+            savedLevelScreen = "Level1Screen";
+            System.out.println("Level 1 saved");
+        } else if (isLevel2Screen) {
+            savedLevelScreen = "Level2Screen";
+            System.out.println("Level 2 saved");
+        } else if (isLevel3Screen) {
+            savedLevelScreen = "Level3Screen";
+            System.out.println("Level 3 saved");
+        }
+        isLevel1Screen = false;
+        isLevel2Screen = false;
+        isLevel3Screen = false;
+        isPlayScreen = true;
+    }
+
+    @Override
+    public void loadButton() {
+        System.out.println("Load button clicked");
+        if ("Level1Screen".equals(savedLevelScreen)) {
+            System.out.println("Level 1 loaded");
+            isPlayScreen = false;
+            isLevel1Screen = true;
+        } else if ("Level2Screen".equals(savedLevelScreen)) {
+            System.out.println("Level 2 loaded");
+            isPlayScreen = false;
+            isLevel2Screen = true;
+        } else if ("Level3Screen".equals(savedLevelScreen)) {
+            System.out.println("Level 3 loaded");
+            isPlayScreen = false;
             isLevel3Screen = true;
         }
     }

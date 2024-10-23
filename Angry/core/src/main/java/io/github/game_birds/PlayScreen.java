@@ -39,6 +39,8 @@ public class PlayScreen {
                 listener.settingButton();
             } else if (exitBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
                 listener.exitButton();
+            } else if (loadBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
+                listener.loadButton();
             } else if (playBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
                 listener.playButton2();
             }
@@ -62,5 +64,6 @@ public class PlayScreen {
         void settingButton();
         void exitButton();
         void playButton2();
+        void loadButton();
     }
 }

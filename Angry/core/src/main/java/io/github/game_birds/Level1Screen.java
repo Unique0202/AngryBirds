@@ -17,10 +17,12 @@ public class Level1Screen {
     private Texture hut= new Texture("hut.png");
     private Texture pig2= new Texture("pig2.png");
     private Texture pause= new Texture("pause.png");
+    private Texture download= new Texture("download.png");
     private Circle pauseBounds= new Circle(0, 375, 100);
+    private Circle downloadBounds= new Circle(580, 410, 60);
     private Level1ScreenListener listener;
 
-    public Level1Screen(Texture background, Texture rock, Texture slingshot, Texture redbirdTexture, Texture block, Texture stick, Texture pig, Texture hut, Texture pig2, Texture pause, Circle pauseBounds, Level1ScreenListener listener) {
+    public Level1Screen(Texture background, Texture rock, Texture slingshot, Texture redbirdTexture, Texture block, Texture stick, Texture pig, Texture hut, Texture pig2, Texture pause, Texture download, Circle pauseBounds, Circle downloadBounds, Level1ScreenListener listener) {
         this.background = background;
         this.rock = rock;
         this.slingshot = slingshot;
@@ -31,7 +33,9 @@ public class Level1Screen {
         this.hut = hut;
         this.pig2 = pig2;
         this.pause = pause;
+        this.download = download;
         this.pauseBounds = pauseBounds;
+        this.downloadBounds = downloadBounds;
         this.listener = listener;
     }
 
@@ -40,6 +44,8 @@ public class Level1Screen {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
                 listener.pauseButton();
+            } else if (downloadBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
+                listener.downloadButton();
             }
         }
     }
@@ -62,6 +68,7 @@ public class Level1Screen {
         batch.draw(hut, 450, 188, 150, 150);
         batch.draw(pig2, 493, 218, 60, 60);
         batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
+        batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
     }
     public void dispose() {
         background.dispose();
@@ -74,8 +81,10 @@ public class Level1Screen {
         hut.dispose();
         pig2.dispose();
         pause.dispose();
+        download.dispose();
     }
     public interface Level1ScreenListener {
         void pauseButton();
+        void downloadButton();
     }
 }

@@ -23,10 +23,12 @@ public class Level3Screen {
     private Texture pig2= new Texture("pig2.png");
     private Texture glass= new Texture("glass.png");
     private Texture pause= new Texture("pause.png");
+    private Texture download= new Texture("download.png");
     private Circle pauseBounds= new Circle(0, 375, 100);
+    private Circle downloadBounds= new Circle(580, 410, 60);
     private Level3ScreenListener listener;
 
-    public Level3Screen(Texture background, Texture stand2, Texture slingshot, Texture redbirdTexture, Texture yellowbirdTexture, Texture blackbirdTexture, Texture icestone, Texture pig, Texture wooden, Texture rockstone, Texture pig3, Texture stick, Texture stone, Texture pig2, Texture glass, Texture pause, Circle pauseBounds, Level3ScreenListener listener) {
+    public Level3Screen(Texture background, Texture stand2, Texture slingshot, Texture redbirdTexture, Texture yellowbirdTexture, Texture blackbirdTexture, Texture icestone, Texture pig, Texture wooden, Texture rockstone, Texture pig3, Texture stick, Texture stone, Texture pig2, Texture glass, Texture pause, Texture download, Circle pauseBounds, Circle downloadBounds, Level3ScreenListener listener) {
         this.background = background;
         this.stand2 = stand2;
         this.slingshot = slingshot;
@@ -43,7 +45,9 @@ public class Level3Screen {
         this.pig2 = pig2;
         this.glass = glass;
         this.pause = pause;
+        this.download = download;
         this.pauseBounds = pauseBounds;
+        this.downloadBounds = downloadBounds;
         this.listener = listener;
     }
     public void update() {
@@ -51,6 +55,8 @@ public class Level3Screen {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
                 listener.pauseButton();
+            } else if (downloadBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
+                listener.downloadButton();
             }
         }
     }
@@ -84,6 +90,7 @@ public class Level3Screen {
         batch.draw(pig2, 530, 320, 40, 40);
         batch.draw(pig2, 390, 130, 30, 30);
         batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
+        batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
     }
 
     public void dispose() {
@@ -103,8 +110,10 @@ public class Level3Screen {
         pig2.dispose();
         glass.dispose();
         pause.dispose();
+        download.dispose();
     }
     public interface Level3ScreenListener {
         void pauseButton();
+        void downloadButton();
     }
 }

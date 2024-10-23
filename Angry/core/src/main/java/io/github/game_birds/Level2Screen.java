@@ -19,10 +19,12 @@ public class Level2Screen {
     private Texture yellowbirdTexture= new Texture("yellowbird.png");
     private Texture slingshot= new Texture("slingshot.png");
     private Texture pause= new Texture("pause.png");
+    private Texture download= new Texture("download.png");
     private Circle pauseBounds= new Circle(0, 375, 100);
+    private Circle downloadBounds= new Circle(580, 410, 60);
     private Level2ScreenListener listener;
 
-    public Level2Screen(Texture background, Texture stand, Texture stick, Texture pig, Texture pig4, Texture glass, Texture rockstone, Texture stone, Texture redbirdTexture, Texture yellowbirdTexture, Texture slingshot, Texture pause, Circle pauseBounds, Level2ScreenListener listener) {
+    public Level2Screen(Texture background, Texture stand, Texture stick, Texture pig, Texture pig4, Texture glass, Texture rockstone, Texture stone, Texture redbirdTexture, Texture yellowbirdTexture, Texture slingshot, Texture pause, Texture download, Circle pauseBounds, Circle downloadBounds, Level2ScreenListener listener) {
         this.background = background;
         this.stand = stand;
         this.stick = stick;
@@ -35,7 +37,9 @@ public class Level2Screen {
         this.yellowbirdTexture = yellowbirdTexture;
         this.slingshot = slingshot;
         this.pause = pause;
+        this.download = download;
         this.pauseBounds = pauseBounds;
+        this.downloadBounds = downloadBounds;
         this.listener = listener;
     }
     public void update() {
@@ -43,6 +47,8 @@ public class Level2Screen {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
                 listener.pauseButton();
+            } else if (downloadBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
+                listener.downloadButton();
             }
         }
     }
@@ -77,6 +83,7 @@ public class Level2Screen {
         batch.draw(yellowbirdTexture, 80, 170, 30, 30);
         batch.draw(slingshot, 100, 170, 50, 50);
         batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
+        batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
     }
     public void dispose() {
         background.dispose();
@@ -91,8 +98,10 @@ public class Level2Screen {
         yellowbirdTexture.dispose();
         slingshot.dispose();
         pause.dispose();
+        download.dispose();
     }
     public interface Level2ScreenListener {
         void pauseButton();
+        void downloadButton();
     }
 }
