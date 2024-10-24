@@ -15,6 +15,7 @@ public class PauseScreen {
     private Circle restartBounds= new Circle(265, 190, 110);
     private Circle resumeBounds= new Circle(450, 190, 110);
     private PauseScreenListener listener;
+
     public PauseScreen(Texture background, Texture back, Texture restart, Texture resume, Circle backBounds, Circle restartBounds, Circle resumeBounds, PauseScreenListener listener) {
         this.background = background;
         this.back = back;

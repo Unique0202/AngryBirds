@@ -13,16 +13,20 @@ Technologies Used
 
 Features:
 1. Level Progression: The game includes at least three levels, each with distinct textures and backgrounds.
-2. UI Elements: Interactive elements such as the play button, settings, and level selection screens are included.
+2. UI Elements: Interactive elements such as the play button, pause buttons, load buttons, settings button,
+    and interaction between different screens.
 
 Usage
 1. Start the Game: Run the Main.java class to launch the game.
+   or write "./gradlew run" in the terminal to run the game.
 2. Select the "Play" button to begin.
 3. Settings: Adjust the game settings from the settings menu.
 4. Level Selection: Select which level to play, or unlock new levels by progressing.
 5. Pause: You can pause the game anytime. Izt has 3 functionalities: to go back to level selection,
                                                                      to restart the same level,
                                                                      to resume the same level
+6. You can save the game progress by clicking on the save button on every level screen.
+7. You can later load that saved level using the load button on the play screen.
 
 Controls
 Mouse/Touch Input: The game uses an input adapter to handle mouse or touch interactions. 

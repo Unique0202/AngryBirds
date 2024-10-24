@@ -30,7 +30,6 @@ public class PlayScreen {
         this.settingsBounds = settingsBounds;
         this.loadBounds = loadBounds;
         this.listener = listener;
-
     }
     public void update() {
         if (Gdx.input.justTouched()) {
