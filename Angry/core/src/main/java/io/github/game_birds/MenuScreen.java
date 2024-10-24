@@ -11,6 +11,7 @@ public class MenuScreen {
     private Texture playButton= new Texture("playbutton.png");
     private Rectangle playButtonBounds= new Rectangle((Gdx.graphics.getWidth() - 100) / 2, 30, 100, 75);
     private MenuScreenListener listener;
+
     public MenuScreen(Texture background, Texture playButton, Rectangle playButtonBounds, MenuScreenListener listener) {
         this.background = background;
         this.playButton = playButton;
