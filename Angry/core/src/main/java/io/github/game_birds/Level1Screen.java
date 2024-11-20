@@ -29,6 +29,16 @@ public class Level1Screen {
     private Texture download = new Texture("download.png");
     private Texture cloud = new Texture("cloud.png"); // Added cloud texture
 
+    private Texture stickTexture;
+    private float stickX = 460, stickY = 150; // Stick position
+    private float stickWidth = 15, stickHeight = 60; // Stick size
+    private float stickRotation = 0; // Rotation angle
+    private boolean isStickFalling = false; // To control animation state
+    private float fallTime = 0;
+    float stickRotationSpeed = 1.0f; //
+    // Timer for smooth rotation
+
+    private Boolean isstickfalling = false;
     private Circle pauseBounds = new Circle(0, 375, 100);
     private Circle downloadBounds = new Circle(580, 410, 60);
     private Level1ScreenListener listener;
@@ -135,6 +145,7 @@ public class Level1Screen {
     }
 
     public void update() {
+        float deltaTime = Gdx.graphics.getDeltaTime();
         if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
@@ -145,7 +156,6 @@ public class Level1Screen {
         }
 
         if (isBirdFlying) {
-            float deltaTime = Gdx.graphics.getDeltaTime();
             birdX += velocityX * deltaTime;
             birdY += velocityY * deltaTime;
             velocityY += gravity * deltaTime;
@@ -168,13 +178,22 @@ public class Level1Screen {
                     }
                 }, 2f);
             }
+            if (birdX >= 460 && birdX <= 475 && birdY >= 150 && birdY <= 210) {
+                isstickfalling = true; // Trigger stick fall
+                isBirdFlying = false;
+            }
         }
-
-        stage.act(Gdx.graphics.getDeltaTime());
+        if (isstickfalling) {
+            if (stickRotation < 90) {
+                stickRotation += stickRotationSpeed * deltaTime; // Gradually increase rotation
+            } else {
+                stickRotation = 90; // Cap the rotation at 90 degrees
+            }
+        }
     }
-
+    TextureRegion stickRegion = new TextureRegion(stick);
     public void render(SpriteBatch batch) {
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(stickRegion, stickX, stickY, stickWidth / 2, stickHeight / 2, stickWidth, stickHeight, 1, 1, stickRotation);        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(rock, 110, 100, 70, 70);
         batch.draw(slingshot, 110, 160, 50, 50);
         batch.draw(redbirdTexture, 60, 100, 30, 30);
@@ -215,6 +234,7 @@ public class Level1Screen {
             draggableRedBird.setPosition(127 - draggableRedBird.getWidth() / 2, 197 - draggableRedBird.getHeight() / 2);
             draggableRedBird.draw(batch, 1);
         }
+
 
         stage.draw();
     }
