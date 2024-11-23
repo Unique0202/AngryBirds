@@ -28,6 +28,7 @@ public class Level1Screen {
     private Texture pause = new Texture("pause.png");
     private Texture download = new Texture("download.png");
     private Texture cloud = new Texture("cloud.png"); // Added cloud texture
+    private int countofbirds = 2 ;
 
     private Texture stickTexture;
     private float stickX = 460, stickY = 150; // Stick position
@@ -130,6 +131,10 @@ public class Level1Screen {
                 isdragstopped = true;
                 isDragging = false;
 
+                // Decrease the count of birds when dragging stops
+                countofbirds--;  // Decrease the bird count
+
+                // Apply velocity based on the initial drag position
                 float x1 = draggableRedBird.getX();
                 float y1 = draggableRedBird.getY();
                 velocityX = (127 - x1) * 3;
@@ -145,6 +150,7 @@ public class Level1Screen {
 
     public void update() {
         float deltaTime = Gdx.graphics.getDeltaTime();
+
         if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
@@ -162,6 +168,7 @@ public class Level1Screen {
             if (birdY <= 0) {
                 birdY = 0;
                 isBirdFlying = false;
+                countofbirds--; // Decrease the bird count when the bird hits the ground
             }
             if (birdX >= 450 && birdX <= 600 && birdY >= 130 && birdY <= 280) {
                 blockHit = true;
@@ -182,35 +189,34 @@ public class Level1Screen {
                 isBirdFlying = false;
             }
         }
-        if (isstickfalling) {
-            if (stickRotation < 90) {
-                stickRotation += stickRotationSpeed * deltaTime; // Gradually increase rotation
-            } else {
-                stickRotation = 90; // Cap the rotation at 90 degrees
-            }
-        }
     }
+
     TextureRegion stickRegion = new TextureRegion(stick);
     public void render(SpriteBatch batch) {
-        batch.draw(stickRegion, stickX, stickY, stickWidth / 2, stickHeight / 2, stickWidth, stickHeight, 1, 1, stickRotation);        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(stickRegion, stickX, stickY, stickWidth / 2, stickHeight / 2, stickWidth, stickHeight, 1, 1, stickRotation);
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(rock, 110, 100, 70, 70);
         batch.draw(slingshot, 110, 160, 50, 50);
-        batch.draw(redbirdTexture, 60, 100, 30, 30);
-        batch.draw(redbirdTexture, 90, 100, 30, 30);
-        batch.draw(redbirdTexture, 30, 100, 30, 30);
+
+        // Initially draw 2 birds based on the count of birds
+        if (countofbirds >= 2) {
+            batch.draw(redbirdTexture, 60, 100, 30, 30); // First red bird
+        }
+        if (countofbirds >= 1) {
+            batch.draw(redbirdTexture, 90, 100, 30, 30); // Second red bird
+        }
+
         batch.draw(block, 450, 100, 50, 50);
         batch.draw(block, 500, 100, 50, 50);
         batch.draw(block, 550, 100, 50, 50);
 
-
-
         batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
         batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
+
         if (!removeHut) {
             batch.draw(pig2, 493, 160, 60, 60);
             batch.draw(hut, 450, 130, 150, 150);
         }
-
 
         if (blockHit) {
             TextureRegion currentFrame = blockBreakAnimation.getKeyFrame(animationTime, false);
@@ -226,13 +232,14 @@ public class Level1Screen {
         if (isBirdFlying) {
             batch.draw(redbirdTexture, birdX, birdY, 17, 17);
         } else if (!isDragging) {
+            // Only show the remaining bird if it hasn't been shot
             draggableRedBird.setPosition(127 - draggableRedBird.getWidth() / 2, 197 - draggableRedBird.getHeight() / 2);
             draggableRedBird.draw(batch, 1);
         }
 
-
         stage.draw();
     }
+
 
     public void dispose() {
         background.dispose();
