@@ -1,6 +1,7 @@
 package io.github.game_birds;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +30,7 @@ public class Level1Screen {
     private Texture download = new Texture("download.png");
     private Texture cloud = new Texture("cloud.png"); // Added cloud texture
     private int countofbirds = 2 ;
+    private Music cloudMusic;
 
     private Texture stickTexture;
     private float stickX = 460, stickY = 150; // Stick position
@@ -77,6 +79,7 @@ public class Level1Screen {
         this.pauseBounds = pauseBounds;
         this.downloadBounds = downloadBounds;
         this.listener = listener;
+        cloudMusic = Gdx.audio.newMusic(Gdx.files.internal("cloudMusic.mp3"));
 
         boundary = new Circle(127, 197, 40);
 
@@ -130,9 +133,7 @@ public class Level1Screen {
             public void dragStop(InputEvent event, float x, float y, int pointer) {
                 isdragstopped = true;
                 isDragging = false;
-
-                // Decrease the count of birds when dragging stops
-                countofbirds--;  // Decrease the bird count
+                countofbirds--;
 
                 // Apply velocity based on the initial drag position
                 float x1 = draggableRedBird.getX();
@@ -151,6 +152,23 @@ public class Level1Screen {
     public void update() {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
+        // Play music only when the cloud is visible (showCloud is true)
+        if (showCloud) {
+            if (!cloudMusic.isPlaying()) {
+                cloudMusic.play();  // Play music when cloud is visible
+                cloudMusic.setLooping(false);  // Ensure the music doesn't loop
+            }
+
+            // Stop the music after 2 seconds
+            Timer.schedule(new Task() {
+                @Override
+                public void run() {
+                    cloudMusic.stop();  // Stop the music after 2 seconds
+                }
+            }, 2f);
+        }
+
+        // Other update logic (e.g., touch events, bird flying, etc.)
         if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (pauseBounds.contains(touchPos.x, Gdx.graphics.getHeight() - touchPos.y)) {
@@ -160,6 +178,7 @@ public class Level1Screen {
             }
         }
 
+        // Logic for bird movement and interaction
         if (isBirdFlying) {
             birdX += velocityX * deltaTime;
             birdY += velocityY * deltaTime;
@@ -168,8 +187,8 @@ public class Level1Screen {
             if (birdY <= 0) {
                 birdY = 0;
                 isBirdFlying = false;
-                countofbirds--; // Decrease the bird count when the bird hits the ground
             }
+
             if (birdX >= 450 && birdX <= 600 && birdY >= 130 && birdY <= 280) {
                 blockHit = true;
                 removeHut = true;
@@ -184,6 +203,7 @@ public class Level1Screen {
                     }
                 }, 2f);
             }
+
             if (birdX >= 460 && birdX <= 475 && birdY >= 150 && birdY <= 210) {
                 isstickfalling = true; // Trigger stick fall
                 isBirdFlying = false;
@@ -200,10 +220,10 @@ public class Level1Screen {
 
         // Initially draw 2 birds based on the count of birds
         if (countofbirds >= 2) {
-            batch.draw(redbirdTexture, 60, 100, 30, 30); // First red bird
+            batch.draw(redbirdTexture, 60, 100, 30, 30);
         }
         if (countofbirds >= 1) {
-            batch.draw(redbirdTexture, 90, 100, 30, 30); // Second red bird
+            batch.draw(redbirdTexture, 90, 100, 30, 30);
         }
 
         batch.draw(block, 450, 100, 50, 50);
