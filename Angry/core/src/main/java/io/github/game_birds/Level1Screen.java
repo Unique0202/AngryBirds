@@ -202,6 +202,7 @@ public class Level1Screen {
                         showCloud = false;
                     }
                 }, 2f);
+
             }
 
             if (birdX >= 460 && birdX <= 475 && birdY >= 150 && birdY <= 210) {
@@ -246,7 +247,9 @@ public class Level1Screen {
         }
 
         if (showCloud) {
-            batch.draw(cloud, 455, 130, 100, 100);
+            batch.draw(cloud, 463, 130, 100, 100);
+
+
         }
 
         if (isBirdFlying) {
