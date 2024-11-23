@@ -54,12 +54,12 @@ public class Level1Screen {
     private boolean isBirdFlying = false;
     private float animationTime = 0f;
     private boolean blockHit = false;
-    private float blockX = 450, blockY = 100; // Coordinates for the block
+    private float blockX = 450, blockY = 100;
     private int blockWidth = 50, blockHeight = 50;
     private Texture[] blockBreakTextures;
     private Animation<TextureRegion> blockBreakAnimation;
-    private boolean showCloud = false; // To control cloud visibility
-    private boolean removeHut = false; // To remove hut when block hit
+    private boolean showCloud = false;
+    private boolean removeHut = false;
 
     public Level1Screen(Texture background, Texture rock, Texture slingshot, Texture redbirdTexture, Texture block, Texture stick, Texture pig, Texture hut, Texture pig2, Texture pause, Texture download, Circle pauseBounds, Circle downloadBounds, Level1ScreenListener listener) {
         this.background = background;
@@ -93,13 +93,12 @@ public class Level1Screen {
             new Texture("block3.png")
         };
 
-        // Create the animation with the textures
         TextureRegion[] blockBreakFrames = new TextureRegion[blockBreakTextures.length];
         for (int i = 0; i < blockBreakTextures.length; i++) {
             blockBreakFrames[i] = new TextureRegion(blockBreakTextures[i]);
         }
 
-        blockBreakAnimation = new Animation<TextureRegion>(0.1f, blockBreakFrames); // Frame duration is 0.1f
+        blockBreakAnimation = new Animation<TextureRegion>(0.1f, blockBreakFrames);
 
         draggableRedBird.addListener(new DragListener() {
             @Override
@@ -164,7 +163,7 @@ public class Level1Screen {
                 birdY = 0;
                 isBirdFlying = false;
             }
-            if (birdX >= 450 && birdX <= 600 && birdY >= 188 && birdY <= 350) {
+            if (birdX >= 450 && birdX <= 600 && birdY >= 130 && birdY <= 280) {
                 blockHit = true;
                 removeHut = true;
                 isBirdFlying = false;
@@ -174,7 +173,7 @@ public class Level1Screen {
                 Timer.schedule(new Task() {
                     @Override
                     public void run() {
-                        showCloud = false; // Remove the cloud after 2 seconds
+                        showCloud = false;
                     }
                 }, 2f);
             }
@@ -202,18 +201,14 @@ public class Level1Screen {
         batch.draw(block, 450, 100, 50, 50);
         batch.draw(block, 500, 100, 50, 50);
         batch.draw(block, 550, 100, 50, 50);
-        batch.draw(stick, 460, 150, 15, 60);
-        batch.draw(stick, 520, 150, 15, 60);
-        batch.draw(stick, 570, 150, 15, 60);
-        batch.draw(stick, 445, 210, 155, 15);
-        batch.draw(pig, 535, 148, 35, 35);
-       // batch.draw(hut, 450, 188, 150, 150);
-        batch.draw(pig, 472, 148, 47, 47);
+
+
+
         batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
         batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
         if (!removeHut) {
-            batch.draw(pig2, 493, 218, 60, 60);
-            batch.draw(hut, 450, 188, 150, 150);
+            batch.draw(pig2, 493, 160, 60, 60);
+            batch.draw(hut, 450, 130, 150, 150);
         }
 
 
@@ -225,7 +220,7 @@ public class Level1Screen {
         }
 
         if (showCloud) {
-            batch.draw(cloud, 450, 188, 100, 100);
+            batch.draw(cloud, 455, 130, 100, 100);
         }
 
         if (isBirdFlying) {
