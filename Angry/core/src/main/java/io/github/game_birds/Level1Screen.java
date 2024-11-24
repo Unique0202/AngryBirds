@@ -12,8 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Level1Screen {
@@ -211,8 +217,18 @@ public class Level1Screen {
         }
     }
 
-    TextureRegion stickRegion = new TextureRegion(stick.getTexture());
+    TextureRegion stickRegion = null;
     public void render(SpriteBatch batch) {
+        if (stick.getDrawable() instanceof TextureRegionDrawable) {
+            stickRegion = ((TextureRegionDrawable) stick.getDrawable()).getRegion();
+        }
+
+// If stickRegion is still null, this means that the Drawable is not a TextureRegionDrawable
+        if (stickRegion == null) {
+            // Handle the case where the Drawable is not a TextureRegionDrawable (e.g., it might be a different type of Drawable)
+            // Optionally log an error or use a fallback texture
+            System.out.println("Error: The Image's Drawable is not a TextureRegionDrawable");
+        }
         batch.draw(stickRegion, stickX, stickY, stickWidth / 2, stickHeight / 2, stickWidth, stickHeight, 1, 1, stickRotation);
         background.draw(batch, 1);
         rock.draw(batch, 1);
@@ -220,10 +236,16 @@ public class Level1Screen {
 
         // Initially draw 2 birds based on the count of birds
         if (countofbirds >= 2) {
-            batch.draw(redbirdImage.getTexture(), 60, 100, 30, 30);
+            if (redbirdImage.getDrawable() instanceof TextureRegionDrawable) {
+                TextureRegion region = ((TextureRegionDrawable) redbirdImage.getDrawable()).getRegion();
+                batch.draw(region, 60, 100, 30, 30); // Draw using the TextureRegion from the Drawable
+            }
         }
         if (countofbirds >= 1) {
-            batch.draw(redbirdImage.getTexture(), 90, 100, 30, 30);
+            if (redbirdImage.getDrawable() instanceof TextureRegionDrawable) {
+                TextureRegion region = ((TextureRegionDrawable) redbirdImage.getDrawable()).getRegion();
+                batch.draw(region, 90, 100, 30, 30); // Draw using the TextureRegion from the Drawable
+            }
         }
 
         block.draw(batch, 1);
@@ -236,6 +258,41 @@ public class Level1Screen {
 
         if (blockHit) {
             batch.draw(blockBreakAnimation.getKeyFrame(animationTime, false), blockX, blockY, blockWidth, blockHeight);
+        }
+    }
+
+
+    public void dispose() {
+        // Dispose of all Drawables by disposing the textures they hold
+        disposeDrawable(background.getDrawable());
+        disposeDrawable(rock.getDrawable());
+        disposeDrawable(slingshot.getDrawable());
+        disposeDrawable(redbirdImage.getDrawable());
+        disposeDrawable(block.getDrawable());
+        disposeDrawable(stick.getDrawable());
+        disposeDrawable(pig.getDrawable());
+        disposeDrawable(hut.getDrawable());
+        disposeDrawable(pig2.getDrawable());
+        disposeDrawable(pause.getDrawable());
+        disposeDrawable(download.getDrawable());
+
+        // Dispose of the music
+        cloudMusic.dispose();
+
+        // Dispose of the stage and other objects that implement Disposable
+        stage.dispose();
+
+        // Optionally dispose of other resources like animations, sounds, or additional textures
+        for (Texture texture : blockBreakTextures) {
+            texture.dispose();
+        }
+    }
+
+    // Helper method to dispose of a Drawable's Texture
+    private void disposeDrawable(Drawable drawable) {
+        if (drawable instanceof TextureRegionDrawable) {
+            TextureRegionDrawable textureRegionDrawable = (TextureRegionDrawable) drawable;
+            textureRegionDrawable.getRegion().getTexture().dispose();
         }
     }
 }
