@@ -17,37 +17,36 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Level1Screen {
-    private Texture background = new Texture("level1_back.jpg");
-    private Texture rock = new Texture("rock.png");
-    private Texture slingshot = new Texture("slingshot.png");
-    private Texture redbirdTexture = new Texture("redbird.png");
-    private Texture block = new Texture("block.png");
-    private Texture stick = new Texture("stick.png");
-    private Texture pig = new Texture("pig.png");
-    private Texture hut = new Texture("hut.png");
-    private Texture pig2 = new Texture("pig2.png");
-    private Texture pause = new Texture("pause.png");
-    private Texture download = new Texture("download.png");
-    private Texture cloud = new Texture("cloud.png"); // Added cloud texture
-    private int countofbirds = 2 ;
+    private Image background;
+    private Image rock;
+    private Image slingshot;
+    private Image redbirdImage;
+    private Image block;
+    private Image stick;
+    private Image pig;
+    private Image hut;
+    private Image pig2;
+    private Image pause;
+    private Image download;
+    private Image cloud; // Added cloud image
+    private int countofbirds = 2;
     private Music cloudMusic;
 
-    private Texture stickTexture;
+    private Image stickImage;
     private float stickX = 460, stickY = 150; // Stick position
     private float stickWidth = 15, stickHeight = 60; // Stick size
     private float stickRotation = 0; // Rotation angle
     private boolean isStickFalling = false; // To control animation state
     private float fallTime = 0;
-    float stickRotationSpeed = 1.0f; //
-    // Timer for smooth rotation
+    float stickRotationSpeed = 1.0f; // Timer for smooth rotation
 
     private Boolean isstickfalling = false;
     private Circle pauseBounds = new Circle(0, 375, 100);
     private Circle downloadBounds = new Circle(580, 410, 60);
     private Level1ScreenListener listener;
-    private Image draggableRedBird;
     private Stage stage;
     private Circle boundary;
+    private Image draggableRedBird;
     private Boolean isDragging = false;
     private Boolean isdragstopped = false;
     private float velocityX = 0;
@@ -65,17 +64,17 @@ public class Level1Screen {
     private boolean removeHut = false;
 
     public Level1Screen(Texture background, Texture rock, Texture slingshot, Texture redbirdTexture, Texture block, Texture stick, Texture pig, Texture hut, Texture pig2, Texture pause, Texture download, Circle pauseBounds, Circle downloadBounds, Level1ScreenListener listener) {
-        this.background = background;
-        this.rock = rock;
-        this.slingshot = slingshot;
-        this.redbirdTexture = redbirdTexture;
-        this.block = block;
-        this.stick = stick;
-        this.pig = pig;
-        this.hut = hut;
-        this.pig2 = pig2;
-        this.pause = pause;
-        this.download = download;
+        this.background = new Image(background);
+        this.rock = new Image(rock);
+        this.slingshot = new Image(slingshot);
+        this.redbirdImage = new Image(redbirdTexture);
+        this.block = new Image(block);
+        this.stick = new Image(stick);
+        this.pig = new Image(pig);
+        this.hut = new Image(hut);
+        this.pig2 = new Image(pig2);
+        this.pause = new Image(pause);
+        this.download = new Image(download);
         this.pauseBounds = pauseBounds;
         this.downloadBounds = downloadBounds;
         this.listener = listener;
@@ -91,7 +90,7 @@ public class Level1Screen {
         draggableRedBird.setPosition(127 - draggableRedBird.getWidth() / 2, 197 - draggableRedBird.getHeight() / 2); // Initial position
         stage.addActor(draggableRedBird);
 
-        blockBreakTextures = new Texture[]{
+        blockBreakTextures = new Texture[] {
             new Texture("block1.png"),
             new Texture("block2.png"),
             new Texture("block3.png")
@@ -212,76 +211,36 @@ public class Level1Screen {
         }
     }
 
-    TextureRegion stickRegion = new TextureRegion(stick);
+    TextureRegion stickRegion = new TextureRegion(stick.getTexture());
     public void render(SpriteBatch batch) {
         batch.draw(stickRegion, stickX, stickY, stickWidth / 2, stickHeight / 2, stickWidth, stickHeight, 1, 1, stickRotation);
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(rock, 110, 100, 70, 70);
-        batch.draw(slingshot, 110, 160, 50, 50);
+        background.draw(batch, 1);
+        rock.draw(batch, 1);
+        slingshot.draw(batch, 1);
 
         // Initially draw 2 birds based on the count of birds
         if (countofbirds >= 2) {
-            batch.draw(redbirdTexture, 60, 100, 30, 30);
+            batch.draw(redbirdImage.getTexture(), 60, 100, 30, 30);
         }
         if (countofbirds >= 1) {
-            batch.draw(redbirdTexture, 90, 100, 30, 30);
+            batch.draw(redbirdImage.getTexture(), 90, 100, 30, 30);
         }
 
-        batch.draw(block, 450, 100, 50, 50);
-        batch.draw(block, 500, 100, 50, 50);
-        batch.draw(block, 550, 100, 50, 50);
-
-        batch.draw(pause, pauseBounds.x, pauseBounds.y, pauseBounds.radius, pauseBounds.radius);
-        batch.draw(download, downloadBounds.x, downloadBounds.y, downloadBounds.radius, downloadBounds.radius);
-
-        if (!removeHut) {
-            batch.draw(pig2, 493, 160, 60, 60);
-            batch.draw(hut, 450, 130, 150, 150);
-        }
+        block.draw(batch, 1);
+        stick.draw(batch, 1);
+        pig.draw(batch, 1);
+        hut.draw(batch, 1);
+        pig2.draw(batch, 1);
+        pause.draw(batch, 1);
+        download.draw(batch, 1);
 
         if (blockHit) {
-            TextureRegion currentFrame = blockBreakAnimation.getKeyFrame(animationTime, false);
-            batch.draw(currentFrame, blockX, blockY, blockWidth, blockHeight);
-        } else {
-            batch.draw(block, blockX, blockY, blockWidth, blockHeight);
+            batch.draw(blockBreakAnimation.getKeyFrame(animationTime, false), blockX, blockY, blockWidth, blockHeight);
         }
-
-        if (showCloud) {
-            batch.draw(cloud, 463, 130, 100, 100);
-
-
-        }
-
-        if (isBirdFlying) {
-            batch.draw(redbirdTexture, birdX, birdY, 17, 17);
-        } else if (!isDragging) {
-            // Only show the remaining bird if it hasn't been shot
-            draggableRedBird.setPosition(127 - draggableRedBird.getWidth() / 2, 197 - draggableRedBird.getHeight() / 2);
-            draggableRedBird.draw(batch, 1);
-        }
-
-        stage.draw();
     }
+}
 
-
-    public void dispose() {
-        background.dispose();
-        rock.dispose();
-        slingshot.dispose();
-        redbirdTexture.dispose();
-        block.dispose();
-        stick.dispose();
-        pig.dispose();
-        hut.dispose();
-        pig2.dispose();
-        pause.dispose();
-        download.dispose();
-        cloud.dispose();
-        stage.dispose();
-    }
-
-    public interface Level1ScreenListener {
-        void pauseButton();
-        void downloadButton();
-    }
+interface Level1ScreenListener {
+    void pauseButton();
+    void downloadButton();
 }
