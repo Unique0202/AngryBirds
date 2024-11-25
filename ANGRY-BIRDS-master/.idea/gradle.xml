@@ -4,14 +4,14 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/ANGRY-BIRDS-master/Angry" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/Angry" />
         <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/ANGRY-BIRDS-master/Angry" />
-            <option value="$PROJECT_DIR$/ANGRY-BIRDS-master/Angry/core" />
-            <option value="$PROJECT_DIR$/ANGRY-BIRDS-master/Angry/html" />
-            <option value="$PROJECT_DIR$/ANGRY-BIRDS-master/Angry/lwjgl3" />
+            <option value="$PROJECT_DIR$/Angry" />
+            <option value="$PROJECT_DIR$/Angry/core" />
+            <option value="$PROJECT_DIR$/Angry/html" />
+            <option value="$PROJECT_DIR$/Angry/lwjgl3" />
           </set>
         </option>
       </GradleProjectSettings>
