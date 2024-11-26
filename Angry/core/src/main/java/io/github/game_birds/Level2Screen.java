@@ -46,16 +46,39 @@ public class Level2Screen {
         stage.addActor(downloadButton);
 
         // Add other elements as actors
-        addElementToStage(stand, 100, 100, 100, 100);
-        addElementToStage(stick, 200, 100, 50, 100);
-        addElementToStage(pig, 300, 100, 50, 50);
-        addElementToStage(pig4, 400, 100, 50, 50);
-        addElementToStage(glass, 500, 100, 100, 50);
-        addElementToStage(rockstone, 600, 100, 100, 100);
-        addElementToStage(stone, 700, 100, 100, 100);
-        addElementToStage(redbird, 800, 100, 30, 30);
-        addElementToStage(yellowbird, 850, 100, 30, 30);
-        addElementToStage(slingshot, 900, 100, 50, 100);
+        addElementToStage(stand, 100, 150, 100, 50);
+        addElementToStage(redbird, 105, 170, 30, 30);
+        addElementToStage(yellowbird, 65, 150, 40, 40);
+        addElementToStage(yellowbird, 75, 150, 40, 40);
+        addElementToStage(slingshot, 145, 170, 58, 58);
+        addElementToStage(stick, 400, 150, 60, 60);
+        addElementToStage(stick, 500, 150, 60, 60);
+        addElementToStage(stick, 400, 210, 10, 70);
+        addElementToStage(stick, 415, 210, 20, 70);
+        addElementToStage(stick, 440, 210, 10, 70);
+        addElementToStage(stick, 395, 280, 65, 10);
+        addElementToStage(stick, 395, 355, 65, 10);
+        addElementToStage(stick, 400, 288, 10, 70);
+        addElementToStage(stick, 445, 288, 10, 70);
+        addElementToStage(rockstone, 505, 207, 10, 70);
+        addElementToStage(rockstone, 543, 207, 10, 70);
+        addElementToStage(rockstone, 500, 270, 68, 10);
+        addElementToStage(rockstone, 505, 277, 10, 70);
+        addElementToStage(rockstone, 543, 277, 10, 70);
+        addElementToStage(rockstone, 505, 207, 10, 70);
+        addElementToStage(rockstone, 500, 345, 68, 10);
+        addElementToStage(rockstone, 505, 207, 10, 70);
+        addElementToStage(stone, 450, 200, 27, 27);
+        addElementToStage(stone, 475, 200, 27, 27);
+        addElementToStage(pig, 465, 150, 35, 35);
+        addElementToStage(pig, 407, 288, 35, 35);
+        addElementToStage(pig, 510, 280, 35, 35);
+
+
+
+
+
+
     }
 
     private ImageButton createButton(Texture texture, float x, float y, float width, float height) {
