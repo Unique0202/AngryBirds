@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -43,6 +44,18 @@ public class Level2Screen {
 
         stage.addActor(pauseButton);
         stage.addActor(downloadButton);
+
+        // Add other elements as actors
+        addElementToStage(stand, 100, 100, 100, 100);
+        addElementToStage(stick, 200, 100, 50, 100);
+        addElementToStage(pig, 300, 100, 50, 50);
+        addElementToStage(pig4, 400, 100, 50, 50);
+        addElementToStage(glass, 500, 100, 100, 50);
+        addElementToStage(rockstone, 600, 100, 100, 100);
+        addElementToStage(stone, 700, 100, 100, 100);
+        addElementToStage(redbird, 800, 100, 30, 30);
+        addElementToStage(yellowbird, 850, 100, 30, 30);
+        addElementToStage(slingshot, 900, 100, 50, 100);
     }
 
     private ImageButton createButton(Texture texture, float x, float y, float width, float height) {
@@ -51,6 +64,13 @@ public class Level2Screen {
         button.setPosition(x, y);
         button.setSize(width, height);
         return button;
+    }
+
+    private void addElementToStage(Texture texture, float x, float y, float width, float height) {
+        Image image = new Image(texture);
+        image.setPosition(x, y);
+        image.setSize(width, height);
+        stage.addActor(image);
     }
 
     public void update() {
@@ -62,7 +82,6 @@ public class Level2Screen {
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         stage.draw();
-
     }
 
     public Stage getStage() {

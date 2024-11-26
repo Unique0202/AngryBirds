@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -43,6 +44,22 @@ public class Level3Screen {
 
         stage.addActor(pauseButton);
         stage.addActor(downloadButton);
+
+        // Add other elements as actors
+        addElementToStage(stand2, 100, 100, 100, 100);
+        addElementToStage(slingshot, 200, 100, 50, 100);
+        addElementToStage(redbird, 300, 100, 30, 30);
+        addElementToStage(yellowbird, 350, 100, 30, 30);
+        addElementToStage(blackbird, 400, 100, 30, 30);
+        addElementToStage(icestone, 450, 100, 100, 50);
+        addElementToStage(pig, 500, 100, 50, 50);
+        addElementToStage(wooden, 550, 100, 100, 100);
+        addElementToStage(rockstone, 600, 100, 100, 100);
+        addElementToStage(pig3, 650, 100, 50, 50);
+        addElementToStage(stick, 700, 100, 50, 100);
+        addElementToStage(stone, 750, 100, 100, 100);
+        addElementToStage(pig2, 800, 100, 50, 50);
+        addElementToStage(glass, 850, 100, 100, 50);
     }
 
     private ImageButton createButton(Texture texture, float x, float y, float width, float height) {
@@ -51,6 +68,13 @@ public class Level3Screen {
         button.setPosition(x, y);
         button.setSize(width, height);
         return button;
+    }
+
+    private void addElementToStage(Texture texture, float x, float y, float width, float height) {
+        Image image = new Image(texture);
+        image.setPosition(x, y);
+        image.setSize(width, height);
+        stage.addActor(image);
     }
 
     public void update() {
@@ -62,7 +86,6 @@ public class Level3Screen {
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         stage.draw();
-
     }
 
     public Stage getStage() {
