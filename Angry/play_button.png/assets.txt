@@ -1,2 +1,0 @@
-background.png
-play_button.png
