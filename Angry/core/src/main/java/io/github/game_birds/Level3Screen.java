@@ -46,20 +46,35 @@ public class Level3Screen {
         stage.addActor(downloadButton);
 
         // Add other elements as actors
-        addElementToStage(stand2, 100, 100, 100, 100);
-        addElementToStage(slingshot, 200, 100, 50, 100);
-        addElementToStage(redbird, 300, 100, 30, 30);
-        addElementToStage(yellowbird, 350, 100, 30, 30);
-        addElementToStage(blackbird, 400, 100, 30, 30);
-        addElementToStage(icestone, 450, 100, 100, 50);
-        addElementToStage(pig, 500, 100, 50, 50);
-        addElementToStage(wooden, 550, 100, 100, 100);
-        addElementToStage(rockstone, 600, 100, 100, 100);
-        addElementToStage(pig3, 650, 100, 50, 50);
-        addElementToStage(stick, 700, 100, 50, 100);
-        addElementToStage(stone, 750, 100, 100, 100);
-        addElementToStage(pig2, 800, 100, 50, 50);
-        addElementToStage(glass, 850, 100, 100, 50);
+        addElementToStage(stand2, 90, 93, 110, 110);
+        addElementToStage(slingshot, 124, 156, 60, 60);
+        addElementToStage(redbird, 100, 156, 30, 30);
+        addElementToStage(yellowbird, 90, 140, 30, 30);
+        addElementToStage(blackbird, 70, 140, 30, 30);
+        addElementToStage(rockstone, 400, 140, 10, 60);
+        addElementToStage(icestone, 400, 200, 10, 30);
+        addElementToStage(rockstone, 400, 230, 10, 30);
+        addElementToStage(rockstone, 460, 140, 10, 60);
+        addElementToStage(icestone, 460, 200, 10, 30);
+        addElementToStage(rockstone, 460, 230, 10, 30);
+        addElementToStage(rockstone, 520, 140, 10, 60);
+        addElementToStage(icestone, 520, 200, 10, 30);
+        addElementToStage(rockstone, 520, 230, 10, 30);
+        addElementToStage(stick,400,260,140,10);
+        addElementToStage(glass,400,270,50,50);
+        addElementToStage(glass,400,300,50,50);
+        addElementToStage(glass,475,270,50,50);
+        addElementToStage(glass,475,300,50,50);
+        addElementToStage(pig2,444,270,40,40);
+        addElementToStage(pig,400,330,40,40);
+        addElementToStage(pig,475,330,40,40);
+        addElementToStage(pig2,410,140,40,40);
+        addElementToStage(pig3,475,140,40,40);
+        addElementToStage(pig2,530,140,30,30);
+
+
+     //   addElementToStage(rockstone, 490, 30, 10, 60);
+
     }
 
     private ImageButton createButton(Texture texture, float x, float y, float width, float height) {
