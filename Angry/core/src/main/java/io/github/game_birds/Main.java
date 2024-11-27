@@ -168,6 +168,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
         System.out.println("Level 1 clicked");
         level1Screen = new Level1Screen(
             new Texture("level1_back.jpg"),
+//            new Texture("ground.png"), // Add the ground texture
             new Texture("rock.png"),
             new Texture("slingshot.png"),
             new Texture("redbird.png"),
