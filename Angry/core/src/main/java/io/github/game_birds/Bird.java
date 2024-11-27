@@ -1,3 +1,4 @@
+// core/src/main/java/io/github/game_birds/Bird.java
 package io.github.game_birds;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -18,7 +19,7 @@ public class Bird {
 
         // Define the body
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody; // Set initial body type to static
         bodyDef.position.set(x, y);
         body = world.createBody(bodyDef);
 
@@ -40,6 +41,10 @@ public class Bird {
         shape.dispose();
     }
 
+    public Body getBody() {
+        return body;
+    }
+
     public void render(SpriteBatch batch) {
         batch.draw(texture, body.getPosition().x - width / 2, body.getPosition().y - height / 2, width, height);
     }
@@ -47,6 +52,17 @@ public class Bird {
     public void dispose() {
         texture.dispose();
     }
+    public Texture getTexture() {
+        return texture;
+    }
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
 
     public void setBodyType(BodyDef.BodyType type) {
         body.setType(type);

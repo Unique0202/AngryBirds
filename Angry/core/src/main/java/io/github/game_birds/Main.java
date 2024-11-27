@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Music;
 
-public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenListener, PlayScreen.PlayScreenListener, SettingsScreen.SettingsScreenListener, LevelSelectionScreen.LevelSelectionScreenListener, Level1Screen.Level1ScreenListener, Level2Screen.Level2ScreenListener, Level3Screen.Level3ScreenListener, PauseScreen.PauseScreenListener {
+public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenListener, PlayScreen.PlayScreenListener, SettingsScreen.SettingsScreenListener, LevelSelectionScreen.LevelSelectionScreenListener, Level1Screen.Level1ScreenListener, Level2Screen.Level2ScreenListener, Level3Screen.Level3ScreenListener, PauseScreen.PauseScreenListener, VictoryScreen.VictoryScreenListener {
     private SpriteBatch batch;
     private MenuScreen menuScreen;
     private PlayScreen playScreen;
@@ -16,6 +16,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     private Level2Screen level2Screen;
     private Level3Screen level3Screen;
     private PauseScreen pauseScreen;
+    private VictoryScreen victoryScreen;
     private boolean isMenuScreen = true;
     private boolean isPlayScreen = false;
     private boolean isSettingsScreen = false;
@@ -27,6 +28,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
     private boolean wasLevel1Screen = false;
     private boolean wasLevel2Screen = false;
     private boolean wasLevel3Screen = false;
+    private boolean isVictoryScreen = false;
     private String savedLevelScreen;
     private Music backgroundMusic;
 
@@ -78,8 +80,10 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
         } else if (isPauseScreen) {
             pauseScreen.render(batch);
             pauseScreen.update();
+        } else if (isVictoryScreen && victoryScreen != null) {
+            victoryScreen.render(batch);
+            victoryScreen.update();
         }
-
     }
 
     @Override
@@ -92,6 +96,7 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
         if (level2Screen != null) level2Screen.dispose();
         if (level3Screen != null) level3Screen.dispose();
         if (pauseScreen != null) pauseScreen.dispose();
+        if (victoryScreen != null) victoryScreen.dispose();
     }
 
     @Override
@@ -341,5 +346,31 @@ public class Main extends ApplicationAdapter implements MenuScreen.MenuScreenLis
             isLevel3Screen = true;
             Gdx.input.setInputProcessor(level3Screen.getStage());
         }
+    }
+
+    @Override
+    public void switchToVictoryScreen() {
+        System.out.println("Switching to Victory Screen");
+        victoryScreen = new VictoryScreen(
+            new Texture("pause1.png"),
+            new Texture("backbutton.png"),
+            new Texture("levelup.png"),
+            new Texture("victory.png"),
+            new VictoryScreen.VictoryScreenListener() {
+                @Override
+                public void backButton() {
+                    isLevelSelectionScreen = true;
+                    isVictoryScreen = false;
+                    Gdx.input.setInputProcessor(levelSelectionScreen.getStage());
+                }
+            }
+        );
+        isLevel1Screen = false;
+        isLevel2Screen = false;
+        isLevel3Screen = false;
+        isPauseScreen = false;
+        isLevelSelectionScreen = false;
+        isVictoryScreen = true;
+        Gdx.input.setInputProcessor(victoryScreen.getStage());
     }
 }

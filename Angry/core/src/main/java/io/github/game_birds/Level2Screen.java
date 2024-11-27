@@ -2,6 +2,7 @@ package io.github.game_birds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,12 @@ public class Level2Screen {
     private List<Stick> sticks;
     private List<Bird> birds;
     private Body groundBody;
+    private Vector2 initialBirdPosition;
+    private boolean isDraggingBird;
+    private float inputDelayTimer;
+    private static final float INPUT_DELAY = 0.5f;
+    private BitmapFont font;
+    private int birdCount = 1;
 
     public Level2Screen(Texture background, Texture stand, Texture stick, Texture pig, Texture pig4, Texture glass, Texture rockstone, Texture stone, Texture redbirdTexture, Texture yellowbirdTexture, Texture slingshot, Texture pause, Texture download, Level2ScreenListener listener) {
         this.background = background;
@@ -57,27 +64,16 @@ public class Level2Screen {
         stage.addActor(pauseButton);
         stage.addActor(downloadButton);
 
-        // Initialize ShapeRenderer
         shapeRenderer = new ShapeRenderer();
-
-        // Initialize Box2D world
         world = new World(new Vector2(0, -9.8f), true);
-
-        // Create ground body
         createGroundBody();
 
-        // Initialize pigs list
         pigs = new ArrayList<>();
+        pigs.add(new Pig(world, pig, 465, 150, 2000));
+        pigs.add(new Pig(world, pig4, 407, 288,3000));
+        pigs.add(new Pig(world, pig4, 507, 280,3000));
 
-        // Add pigs to the list
-        pigs.add(new Pig(world, pig, 465, 150));
-        pigs.add(new Pig(world, pig4, 407, 288));
-        pigs.add(new Pig(world, pig4, 507, 280));
-
-        // Initialize sticks list
         sticks = new ArrayList<>();
-
-        // Add sticks to the list
         sticks.add(new Stick(world, stick, 420, 150, 60, 60));
         sticks.add(new Stick(world, stick, 520, 150, 60, 60));
         sticks.add(new Stick(world, stick, 400, 210, 10, 70));
@@ -91,21 +87,22 @@ public class Level2Screen {
         sticks.add(new Stick(world, rockstone, 543, 207, 10, 70));
         sticks.add(new Stick(world, rockstone, 520, 210, 20, 70));
         sticks.add(new Stick(world, rockstone, 525, 270, 98, 10));
-        sticks.add(new Stick(world, rockstone, 505, 277, 10, 70));
-        sticks.add(new Stick(world, rockstone, 543, 277, 10, 70));
-        sticks.add(new Stick(world, rockstone, 525, 345, 98, 10));
+        sticks.add(new Stick(world, rockstone, 505, 277, 15, 70));
+        sticks.add(new Stick(world, rockstone, 543, 277, 15, 70));
+        sticks.add(new Stick(world, rockstone, 525, 345, 108, 10));
 
-        // Initialize birds list
         birds = new ArrayList<>();
+        Bird bird = new Bird(world, redbirdTexture, 130, 260, 30, 30);
+        birds.add(bird);
 
-        // Add birds to the list
-        birds.add(new Bird(world, redbirdTexture, 105, 170, 30, 30));
-        birds.add(new Bird(world, yellowbirdTexture, 65, 150, 40, 40));
-        birds.add(new Bird(world, yellowbirdTexture, 75, 150, 40, 40));
+        initialBirdPosition = new Vector2(110, 240);
+        isDraggingBird = false;
 
-        // Add other elements as actors
         addElementToStage(stand, 100, 150, 100, 50);
         addElementToStage(slingshot, 145, 170, 58, 58);
+
+        inputDelayTimer = INPUT_DELAY;
+        font = new BitmapFont();
     }
 
     private void createGroundBody() {
@@ -145,6 +142,55 @@ public class Level2Screen {
     public void update() {
         stage.act(Gdx.graphics.getDeltaTime());
         world.step(1/60f, 6, 2);
+
+        if (inputDelayTimer > 0) {
+            inputDelayTimer -= Gdx.graphics.getDeltaTime();
+        } else {
+            handleInput();
+        }
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isTouched()) {
+            Vector2 touchPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            stage.screenToStageCoordinates(touchPos);
+
+            Bird bird = birds.get(0);
+            Vector2 birdPos = bird.getPosition();
+
+            if (isDraggingBird || birdPos.dst(touchPos) < 50) {
+                isDraggingBird = true;
+                bird.setPosition(touchPos.x, touchPos.y);
+                bird.setBodyType(BodyDef.BodyType.StaticBody);
+            } else {
+                for (Stick stick : sticks) {
+                    if (stick.getBounds().contains(touchPos.x, touchPos.y)) {
+                        stick.setBodyType(BodyDef.BodyType.DynamicBody);
+                    }
+                }
+            }
+        } else if (isDraggingBird) {
+            isDraggingBird = false;
+            Bird bird = birds.get(0);
+            bird.setBodyType(BodyDef.BodyType.DynamicBody);
+
+            Vector2 launchVelocity = new Vector2(initialBirdPosition).sub(bird.getPosition()).scl(5);
+            bird.setLinearVelocity(launchVelocity);
+
+            if (birdCount < 5) {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Bird newBird = new Bird(world, bird.getTexture(), initialBirdPosition.x, initialBirdPosition.y, bird.getWidth(), bird.getHeight());
+                    birds.add(0, newBird);
+                    birdCount++;
+                }).start();
+            }
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -153,22 +199,18 @@ public class Level2Screen {
         batch.end();
         stage.draw();
 
-        // Draw the ground line
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 1); // Black color
-        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), 5); // Draw a rectangle as a line
+        shapeRenderer.setColor(0, 0, 0, 1);
+        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), 5);
         shapeRenderer.end();
 
-        // Render pigs
         batch.begin();
         for (Pig pig : pigs) {
-            pig.render(batch);
+            pig.render(batch, font);
         }
-        // Render sticks
         for (Stick stick : sticks) {
             stick.render(batch);
         }
-        // Render birds
         for (Bird bird : birds) {
             bird.render(batch);
         }
@@ -184,6 +226,7 @@ public class Level2Screen {
         stage.dispose();
         shapeRenderer.dispose();
         world.dispose();
+        font.dispose();
         for (Pig pig : pigs) {
             pig.dispose();
         }
