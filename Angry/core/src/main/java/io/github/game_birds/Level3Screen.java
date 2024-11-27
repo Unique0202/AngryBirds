@@ -1,3 +1,4 @@
+// core/src/main/java/io/github/game_birds/Level3Screen.java
 package io.github.game_birds;
 
 import com.badlogic.gdx.Gdx;
@@ -14,9 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Level3Screen {
+public class Level3Screen implements ContactListener {
     private Texture background;
     private Stage stage;
     private ImageButton pauseButton;
@@ -34,6 +36,8 @@ public class Level3Screen {
     private static final float INPUT_DELAY = 0.5f;
     private BitmapFont font;
     private int birdCount = 1;
+    private int pigCount;
+    private boolean allPigsGone;
 
     public Level3Screen(Texture background, Texture stand2, Texture slingshot, Texture redbird, Texture yellowbird, Texture blackbird, Texture icestone, Texture pig, Texture wooden, Texture rockstone, Texture pig3, Texture stick, Texture stone, Texture pig2, Texture glass, Texture pause, Texture download, Level3ScreenListener listener) {
         this.background = background;
@@ -66,12 +70,16 @@ public class Level3Screen {
 
         shapeRenderer = new ShapeRenderer();
         world = new World(new Vector2(0, -9.8f), true);
+        world.setContactListener(this);
         createGroundBody();
 
         pigs = new ArrayList<>();
-        pigs.add(new Pig(world, pig, 420, 140,2000));
+        pigs.add(new Pig(world, pig, 420, 140, 2000));
         pigs.add(new Pig(world, pig3, 475, 140, 2700));
         pigs.add(new Pig(world, pig2, 450, 270, 2500));
+
+        pigCount = pigs.size();
+        allPigsGone = false;
 
         sticks = new ArrayList<>();
         sticks.add(new Stick(world, rockstone, 400, 140, 10, 60));
@@ -140,12 +148,26 @@ public class Level3Screen {
 
     public void update() {
         stage.act(Gdx.graphics.getDeltaTime());
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
 
         if (inputDelayTimer > 0) {
             inputDelayTimer -= Gdx.graphics.getDeltaTime();
         } else {
             handleInput();
+        }
+
+        Iterator<Pig> pigIterator = pigs.iterator();
+        while (pigIterator.hasNext()) {
+            Pig pig = pigIterator.next();
+            if (pig.isDead()) {
+                world.destroyBody(pig.getBody());
+                pigIterator.remove();
+                pigCount--;
+            }
+        }
+
+        if (pigCount == 0) {
+            listener.switchToVictoryScreen();
         }
     }
 
@@ -237,8 +259,36 @@ public class Level3Screen {
         }
     }
 
+    @Override
+    public void beginContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+
+        if (fixtureA.getBody().getUserData() instanceof Pig) {
+            ((Pig) fixtureA.getBody().getUserData()).handleCollision();
+        } else if (fixtureB.getBody().getUserData() instanceof Pig) {
+            ((Pig) fixtureB.getBody().getUserData()).handleCollision();
+        }
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+        // No action needed
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        // No action needed
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+        // No action needed
+    }
+
     public interface Level3ScreenListener {
         void pauseButton();
         void downloadButton();
+        void switchToVictoryScreen();
     }
 }
