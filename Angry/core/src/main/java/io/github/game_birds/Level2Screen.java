@@ -35,7 +35,7 @@ public class Level2Screen implements ContactListener {
     private float inputDelayTimer;
     private static final float INPUT_DELAY = 0.5f;
     private BitmapFont font;
-    private int birdCount = 1;
+    private int birdCount = 0;
     private int pigCount;
     private boolean allPigsGone;
 
@@ -100,10 +100,10 @@ public class Level2Screen implements ContactListener {
         sticks.add(new Stick(world, rockstone, 525, 345, 108, 10));
 
         birds = new ArrayList<>();
-        Bird bird = new Bird(world, redbirdTexture, 130, 260, 30, 30);
+        Bird bird = new Bird(world, yellowbirdTexture, 150, 220, 30, 30);
         birds.add(bird);
 
-        initialBirdPosition = new Vector2(110, 240);
+        initialBirdPosition = new Vector2(150, 220);
         isDraggingBird = false;
 
         addElementToStage(stand, 100, 150, 100, 50);
@@ -167,8 +167,19 @@ public class Level2Screen implements ContactListener {
             }
         }
 
+        // Remove sticks that have collided 25 times
+        Iterator<Stick> stickIterator = sticks.iterator();
+        while (stickIterator.hasNext()) {
+            Stick stick = stickIterator.next();
+            if (stick.getCollisionCount() >= 25) {
+                world.destroyBody(stick.getBody());
+                stickIterator.remove();
+            }
+        }
         if (pigCount == 0) {
             listener.switchToVictoryScreen();
+        } else if (birdCount == 5 && pigCount > 0) {
+            listener.switchToRetryScreen();
         }
     }
 
@@ -202,7 +213,7 @@ public class Level2Screen implements ContactListener {
             if (birdCount < 5) {
                 new Thread(() -> {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(7000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -270,6 +281,12 @@ public class Level2Screen implements ContactListener {
         } else if (fixtureB.getBody().getUserData() instanceof Pig) {
             ((Pig) fixtureB.getBody().getUserData()).handleCollision();
         }
+
+        if (fixtureA.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureA.getBody().getUserData()).incrementCollisionCount();
+        } else if (fixtureB.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureB.getBody().getUserData()).incrementCollisionCount();
+        }
     }
 
     @Override
@@ -291,5 +308,6 @@ public class Level2Screen implements ContactListener {
         void pauseButton();
         void downloadButton();
         void switchToVictoryScreen();
+        void switchToRetryScreen();
     }
 }

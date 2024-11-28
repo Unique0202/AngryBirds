@@ -34,10 +34,11 @@ public class Level1Screen implements ContactListener {
     private boolean isDraggingBird;
     private float inputDelayTimer;
     private static final float INPUT_DELAY = 0.5f;
-    private BitmapFont font; // Add a BitmapFont for rendering text
-    private int birdCount = 1; // Initialize birdCount
-    private int pigCount; // Add pigCount
-    private boolean allPigsGone; // Add allPigsGone
+    private BitmapFont font;
+    private int birdCount = 0;
+    private int pigCount;
+    private boolean allPigsGone;
+    private RetryScreen retryScreen;
 
     public Level1Screen(Texture background, Texture rock, Texture slingshot, Texture redbirdTexture, Texture block, Texture stickTexture, Texture horiStickTexture, Texture pigTexture, Texture hut, Texture pig2Texture, Texture pause, Texture download, Level1ScreenListener listener) {
         this.background = background;
@@ -68,32 +69,21 @@ public class Level1Screen implements ContactListener {
         stage.addActor(pauseButton);
         stage.addActor(downloadButton);
 
-        // Initialize ShapeRenderer
         shapeRenderer = new ShapeRenderer();
-
-        // Initialize Box2D world
         world = new World(new Vector2(0, -9.8f), true);
-        world.setContactListener(this); // Set the contact listener
+        world.setContactListener(this);
 
-        // Create ground body
         createGroundBody();
 
-        // Initialize pigs list
         pigs = new ArrayList<>();
+        pigs.add(new Pig(world, pigTexture, 460, 170, 2000));
+        pigs.add(new Pig(world, pig2Texture, 460, 100, 2500));
+        pigs.add(new Pig(world, pig2Texture, 460, 250, 2500));
 
-        // Add pigs to the list
-        pigs.add(new Pig(world, pigTexture, 460, 170,2000));
-        pigs.add(new Pig(world, pig2Texture, 460, 100,2500));
-        pigs.add(new Pig(world, pig2Texture, 460, 250,2500));
-
-        // Initialize pigCount
         pigCount = pigs.size();
         allPigsGone = false;
 
-        // Initialize sticks list
         sticks = new ArrayList<>();
-
-        // Add sticks to the list
         sticks.add(new Stick(world, stickTexture, 400, 100, 15, 60));
         sticks.add(new Stick(world, stickTexture, 560, 100, 15, 60));
         sticks.add(new Stick(world, horiStickTexture, 480, 160, 175, 15));
@@ -104,27 +94,20 @@ public class Level1Screen implements ContactListener {
         sticks.add(new Stick(world, stickTexture, 520, 250, 15, 60));
         sticks.add(new Stick(world, horiStickTexture, 480, 310, 175, 15));
 
-        // Initialize birds list
         birds = new ArrayList<>();
-
-        // Add birds to the list
         Bird bird = new Bird(world, redbirdTexture, 130, 260, 30, 30);
         birds.add(bird);
 
-        // Store initial bird position
         initialBirdPosition = new Vector2(110, 240);
-
         isDraggingBird = false;
 
-        // Add other elements as actors
         addElementToStage(rock, 100, 100, 100, 100);
         addElementToStage(slingshot, 115, 180, 50, 100);
         addElementToStage(hut, 700, 100, 100, 100);
 
         inputDelayTimer = INPUT_DELAY;
-
-        // Initialize BitmapFont
         font = new BitmapFont();
+
     }
 
     private void createGroundBody() {
@@ -163,7 +146,7 @@ public class Level1Screen implements ContactListener {
 
     public void update() {
         stage.act(Gdx.graphics.getDeltaTime());
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
 
         if (inputDelayTimer > 0) {
             inputDelayTimer -= Gdx.graphics.getDeltaTime();
@@ -171,20 +154,30 @@ public class Level1Screen implements ContactListener {
             handleInput();
         }
 
-        // Remove dead pigs
         Iterator<Pig> pigIterator = pigs.iterator();
         while (pigIterator.hasNext()) {
             Pig pig = pigIterator.next();
             if (pig.isDead()) {
                 world.destroyBody(pig.getBody());
                 pigIterator.remove();
-                pigCount--; // Decrease pigCount
+                pigCount--;
+            }
+        }
+        // Remove sticks that have collided 20 times
+        Iterator<Stick> stickIterator = sticks.iterator();
+        while (stickIterator.hasNext()) {
+            Stick stick = stickIterator.next();
+            if (stick.getCollisionCount() >= 20) {
+                world.destroyBody(stick.getBody());
+                stickIterator.remove();
             }
         }
 
-        // Check if all pigs are gone
+
         if (pigCount == 0) {
             listener.switchToVictoryScreen();
+        } else if (birdCount == 5 && pigCount > 0) {
+            listener.switchToRetryScreen();
         }
     }
 
@@ -212,22 +205,20 @@ public class Level1Screen implements ContactListener {
             Bird bird = birds.get(0);
             bird.setBodyType(BodyDef.BodyType.DynamicBody);
 
-            // Calculate the launch velocity based on the difference between the initial position and the current position
-            Vector2 launchVelocity = new Vector2(initialBirdPosition).sub(bird.getPosition()).scl(5); // Adjust the scale factor as needed
+            Vector2 launchVelocity = new Vector2(initialBirdPosition).sub(bird.getPosition()).scl(5);
             bird.setLinearVelocity(launchVelocity);
 
             if (birdCount < 5) {
-                // Wait for 10 seconds before creating a new bird
                 new Thread(() -> {
                     try {
-                        Thread.sleep(10000); // 10000 milliseconds = 10 seconds
+                        Thread.sleep(7000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                     Bird newBird = new Bird(world, bird.getTexture(), initialBirdPosition.x, initialBirdPosition.y, bird.getWidth(), bird.getHeight());
-                    birds.add(0, newBird); // Add the new bird to the beginning of the list
-                    birdCount++; // Increment the bird count
+                    birds.add(0, newBird);
+                    birdCount++;
                 }).start();
             }
         }
@@ -239,22 +230,18 @@ public class Level1Screen implements ContactListener {
         batch.end();
         stage.draw();
 
-        // Draw the ground line
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 1); // Black color
-        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), 5); // Draw a rectangle as a line
+        shapeRenderer.setColor(0, 0, 0, 1);
+        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), 5);
         shapeRenderer.end();
 
-        // Render pigs
         batch.begin();
         for (Pig pig : pigs) {
-            pig.render(batch, font); // Pass the font to render the health
+            pig.render(batch, font);
         }
-        // Render sticks
         for (Stick stick : sticks) {
             stick.render(batch);
         }
-        // Render birds
         for (Bird bird : birds) {
             bird.render(batch);
         }
@@ -270,7 +257,7 @@ public class Level1Screen implements ContactListener {
         stage.dispose();
         shapeRenderer.dispose();
         world.dispose();
-        font.dispose(); // Dispose the font
+        font.dispose();
         for (Pig pig : pigs) {
             pig.dispose();
         }
@@ -292,6 +279,13 @@ public class Level1Screen implements ContactListener {
         } else if (fixtureB.getBody().getUserData() instanceof Pig) {
             ((Pig) fixtureB.getBody().getUserData()).handleCollision();
         }
+
+        if (fixtureA.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureA.getBody().getUserData()).incrementCollisionCount();
+        } else if (fixtureB.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureB.getBody().getUserData()).incrementCollisionCount();
+        }
+
     }
 
     @Override
@@ -313,5 +307,7 @@ public class Level1Screen implements ContactListener {
         void pauseButton();
         void downloadButton();
         void switchToVictoryScreen();
+        void switchToRetryScreen();
+        void retryButton();
     }
 }

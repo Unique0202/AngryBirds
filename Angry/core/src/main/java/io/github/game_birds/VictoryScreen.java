@@ -26,7 +26,7 @@ public class VictoryScreen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        backButton = createButton(backTexture, 200, 100, 150, 75);
+        backButton = createButton(backTexture, 240, 80, 150, 75);
 
         backButton.addListener(event -> {
             if (backButton.isPressed()) {
@@ -40,12 +40,14 @@ public class VictoryScreen {
 
         // Add level up image
         Image levelUpImage = new Image(levelUpTexture);
-        levelUpImage.setPosition(200, 300); // Set the position as needed
+        levelUpImage.setPosition(170, 170);// Set the position as needed
+        levelUpImage.setSize(300, 80); // Set the size as needed
         stage.addActor(levelUpImage);
 
         // Add victory image
         Image victoryImage = new Image(victoryTexture);
-        victoryImage.setPosition(200, 400); // Set the position as needed
+        victoryImage.setPosition(75, 270); // Set the position as needed
+        victoryImage.setSize(500, 120); // Set the size as needed
         stage.addActor(victoryImage);
     }
 

@@ -14,18 +14,19 @@ public abstract class Structure {
     protected Body body;
     protected float width;
     protected float height;
+    protected int health;
 
-    public Structure(World world, Texture texture, float x, float y, float width, float height) {
+    public Structure(World world, Texture texture, float x, float y, float width, float height, int health) {
         this.texture = texture;
         this.width = width;
         this.height = height;
+        this.health = health;
 
         // Define the body
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody; // Change to DynamicBody
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
         body = world.createBody(bodyDef);
-
 
         // Define the shape
         PolygonShape shape = new PolygonShape();
@@ -43,6 +44,16 @@ public abstract class Structure {
 
         // Dispose the shape after using it
         shape.dispose();
+
+        // Set user data for collision detection
+        body.setUserData(this);
+    }
+
+    public void handleCollision() {
+        health -= 10; // Decrease health by 10 on collision
+        if (health <= 0) {
+            // Handle structure destruction
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -52,7 +63,15 @@ public abstract class Structure {
     public void dispose() {
         texture.dispose();
     }
-    // core/src/main/java/io/github/game_birds/Structure.java
+
+    public Body getBody() {
+        return body;
+    }
+
+    public boolean isDestroyed() {
+        return health <= 0;
+    }
+
     public void setBodyType(BodyDef.BodyType type) {
         body.setType(type);
     }

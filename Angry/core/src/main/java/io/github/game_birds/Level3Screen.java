@@ -35,7 +35,7 @@ public class Level3Screen implements ContactListener {
     private float inputDelayTimer;
     private static final float INPUT_DELAY = 0.5f;
     private BitmapFont font;
-    private int birdCount = 1;
+    private int birdCount = 0;
     private int pigCount;
     private boolean allPigsGone;
 
@@ -99,7 +99,7 @@ public class Level3Screen implements ContactListener {
         sticks.add(new Stick(world, icestone, 380, 140, 10, 120));
 
         birds = new ArrayList<>();
-        Bird bird = new Bird(world, redbird, 130, 260, 30, 30);
+        Bird bird = new Bird(world, blackbird, 130, 260, 30, 30);
         birds.add(bird);
 
         initialBirdPosition = new Vector2(110, 240);
@@ -166,8 +166,19 @@ public class Level3Screen implements ContactListener {
             }
         }
 
+        // Remove sticks that have collided 30 times
+        Iterator<Stick> stickIterator = sticks.iterator();
+        while (stickIterator.hasNext()) {
+            Stick stick = stickIterator.next();
+            if (stick.getCollisionCount() >= 30) {
+                world.destroyBody(stick.getBody());
+                stickIterator.remove();
+            }
+        }
         if (pigCount == 0) {
             listener.switchToVictoryScreen();
+        } else if (birdCount == 5 && pigCount > 0) {
+            listener.switchToRetryScreen();
         }
     }
 
@@ -201,7 +212,7 @@ public class Level3Screen implements ContactListener {
             if (birdCount < 5) {
                 new Thread(() -> {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(7000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -269,6 +280,12 @@ public class Level3Screen implements ContactListener {
         } else if (fixtureB.getBody().getUserData() instanceof Pig) {
             ((Pig) fixtureB.getBody().getUserData()).handleCollision();
         }
+
+        if (fixtureA.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureA.getBody().getUserData()).incrementCollisionCount();
+        } else if (fixtureB.getBody().getUserData() instanceof Stick) {
+            ((Stick) fixtureB.getBody().getUserData()).incrementCollisionCount();
+        }
     }
 
     @Override
@@ -290,5 +307,6 @@ public class Level3Screen implements ContactListener {
         void pauseButton();
         void downloadButton();
         void switchToVictoryScreen();
+        void switchToRetryScreen();
     }
 }
