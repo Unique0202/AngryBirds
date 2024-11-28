@@ -99,14 +99,14 @@ public class Level3Screen implements ContactListener {
         sticks.add(new Stick(world, icestone, 380, 140, 10, 120));
 
         birds = new ArrayList<>();
-        Bird bird = new Bird(world, blackbird, 130, 260, 30, 30);
+        Bird bird = new Bird(world, blackbird, 130, 200, 30, 30);
         birds.add(bird);
 
-        initialBirdPosition = new Vector2(110, 240);
+        initialBirdPosition = new Vector2(130, 200);
         isDraggingBird = false;
 
         addElementToStage(stand2, 90, 93, 110, 110);
-        addElementToStage(slingshot, 124, 156, 60, 60);
+        addElementToStage(slingshot, 124, 150, 60, 60);
 
         inputDelayTimer = INPUT_DELAY;
         font = new BitmapFont();
