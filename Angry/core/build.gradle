@@ -8,7 +8,17 @@ dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
+  // Add JUnit dependency
+  testImplementation 'junit:junit:4.13.2'
+
+  // Add Mockito dependency
+  testImplementation 'org.mockito:mockito-core:4.11.0'
+
+  // Add libGDX native dependencies
+  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
 }

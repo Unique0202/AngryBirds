@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Angry.core" target="11" />
+      <module name="Angry.core.main" target="11" />
+      <module name="Angry.core.test" target="11" />
+      <module name="Angry.html" target="11" />
+      <module name="Angry.html.main" target="11" />
+      <module name="Angry.html.test" target="11" />
+      <module name="Angry.lwjgl3" target="11" />
+      <module name="Angry.lwjgl3.main" target="11" />
+      <module name="Angry.lwjgl3.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

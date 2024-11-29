@@ -2,8 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/2023568_2023310.Angry.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/2023568_2023310.Angry.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/html/2023568_2023310.Angry.html.main.iml" filepath="$PROJECT_DIR$/.idea/modules/html/2023568_2023310.Angry.html.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Angry.iml" filepath="$PROJECT_DIR$/.idea/modules/Angry.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/Angry.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/Angry.core.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/Angry.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/Angry.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/Angry.core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/Angry.core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/html/Angry.html.iml" filepath="$PROJECT_DIR$/.idea/modules/html/Angry.html.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/html/Angry.html.main.iml" filepath="$PROJECT_DIR$/.idea/modules/html/Angry.html.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/html/Angry.html.test.iml" filepath="$PROJECT_DIR$/.idea/modules/html/Angry.html.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.test.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl3/Angry.lwjgl3.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/AngryBirds.iml" filepath="$PROJECT_DIR$/.idea/AngryBirds.iml" />
     </modules>
   </component>

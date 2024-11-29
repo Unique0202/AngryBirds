@@ -302,6 +302,9 @@ public class Level3Screen implements ContactListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
         // No action needed
     }
+    public int getPigCount() {
+        return pigCount;
+    }
 
     public interface Level3ScreenListener {
         void pauseButton();
